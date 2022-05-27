@@ -1,14 +1,14 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from sqlalchemy import Column,Integer,String,DateTime,create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:123456@localhost/prueba'
+uri = 'mysql+pymysql://root:123456@localhost/prueba'
+app.config['SQLALCHEMY_DATABASE_URI']= uri
+engine = create_engine(uri)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-engine = create_engine('mysql+pymysql://root:123456@localhost/prueba')
-
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -24,7 +24,6 @@ class tablaS(db.Model):
         self.hash = hash
         self.timeStamp = timeStamp
 
-
 class tablaA(db.Model):
     __tablename__= 'tablaa'
     id_a = db.Column(db.Integer, primary_key=True)
@@ -33,11 +32,18 @@ class tablaA(db.Model):
     timeStamp = db.Column(db.DateTime)
     answer = db.Column(db.String(70))
 
+    def __init__(self,id,ida,hash,timeStamp,answer):
+        self.id = id
+        self.ida = ida
+        self.hash = hash
+        self.timeStamp = timeStamp
+        self.answer = answer
+
 db.create_all()
 
 class tablaSchema(ma.Schema):
     class Meta:
-        fields = ('id','hash','hashmap')
+        fields = ('id','ida','hash','timeStamp','answer')
 
 tabla_Schema = tablaSchema()
 tablas_Schema = tablaSchema(many=True)
@@ -67,36 +73,32 @@ def get_Tabla():
     return jsonify(resultS,resultA)
 
 #Buscando en la tabla de sesiones por ID
-@app.route('/sesion/<id>',methods=['GET'])
+@app.route('/sesion/<id>')
 def get_ID(id):
     sesion = tablaS.query.get(id)
     return tablas_Schema.jsonify(sesion)
 
-#Buscando y actualizando en la tabla de sesiones por ID
-@app.route('/sesion/<id>',methods=['PUT'])
-def update_ID(id):
-    sesion = tablaS.query.get(id)
-
-    idS = request.json['id']
-    hash = request.json['hash']
-    timeStamp = request.json['timeStamp']
-
-    tablaS.id = idS
-    tablaS.hash = hash
-    tablaS.timeStamp = timeStamp
-
+#Eliminando las tablas
+@app.route('/delete', methods=['DELETE'])
+def delete_ID():
+    sesionS = tablaS.query.all()
+    db.session.delete(sesionS)
+    sesionA = tablaS.query.all()
+    db.session.delete(sesionA)
     db.session.commit()
 
-    return tablas_Schema.jsonify(sesion)
+    return tablas_Schema.jsonify(sesionS,sesionA)
 
-#Buscando y Eliminando en la tabla de sesiones por ID
-@app.route('/sesion/<id>', methods=['DELETE'])
-def delete_ID(id):
-    sesion = tablaS.query.get(id)
-    db.session.delete(sesion)
-    db.session.commit()
-
-    return tablas_Schema.jsonify(sesion)
+@app.route('sesion/<id>/<hash>')
+def checkerID_Hash(id,hash):
+    if tablaS.query.get(hash) != "{''}":
+        answer = 'ok'
+        #Almacenar id, hash, timeStamp y answer a tabla A
+        return answer
+    else:
+        answer = 'nok'
+        #Almacenar id, hash, timeStamp y answer a tabla A
+        return answer
 
 if __name__ == '__main__':
     app.run(debug=True,port=8000)
