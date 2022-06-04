@@ -6,9 +6,10 @@ Made by:
 - [Camilo Andrés Céspedes Jímenez](https://github.com/Camilo-116)
 - [Dilan Triana Sanchez](https://github.com/Tdilan395)
 
-#SetUp
-$ git clone [https://github.com/gonzalezsebastian/DockerWebService.git]
+# Set Up
+```sh
+$ git clone (https://github.com/gonzalezsebastian/DockerWebService.git)
 $ cd DockerWebService
 $ docker-compose up -d
-
+```
 #Test app
