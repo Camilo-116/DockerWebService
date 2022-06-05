@@ -8,7 +8,7 @@ Made by:
 
 # Set Up
 ```sh
-$ git clone (https://github.com/gonzalezsebastian/DockerWebService.git)
+$ git clone https://github.com/gonzalezsebastian/DockerWebService.git
 $ cd DockerWebService
 $ docker-compose up -d
 ```
