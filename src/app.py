@@ -133,13 +133,7 @@ def get_TablaA():
     tablaa = tablaA.query.all()
     resultA = tAs_Schema.dump(tablaa)
     return tAs_Schema.jsonify(resultA)
-
-#Buscando en la tabla de sesiones por ID
-@app.route('/sesion/<id>', methods=['GET'])
-def get_ID(id):
-    sesiones = tablaS.query.get(int(id))
-    return tSs_Schema.jsonify(sesiones)
-
+    
 #Eliminando las tablas
 @app.route('/delete', methods=['GET'])
 def delete_ID():
