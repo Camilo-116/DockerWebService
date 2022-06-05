@@ -65,9 +65,9 @@ tAs_Schema = tablaA_Schema(many=True)
 def conexion():
     try:
         with Session(engine) as session:
-            return 'ok'
+            return 'ok\n'
     except Exception as e:
-        return 'nok'
+        return 'nok\n'
 
 #Creando sesiones en la tabla S
 @app.route('/tablaS/<id>',methods=['GET'])
@@ -81,9 +81,9 @@ def createS(id):
     try:
         db.session.add(new_session)
         db.session.commit()
-        return 'Hash created: '+hash
+        return 'Hash created: '+hash+'\n'
     except:
-        return 'Could not create hash with id: '+id+" and time Stamp: "+timestamp
+        return 'Could not create hash with id: '+id+" and time Stamp: "+timestamp+'\n'
 
 #Creando sesiones en la tabla S (timeStamp manual)
 @app.route('/tablaS/<id>/<ts>',methods=['GET'])
@@ -97,9 +97,9 @@ def createS_manual(id,ts):
     try:
         db.session.add(new_session)
         db.session.commit()
-        return 'Hash created: '+hash
+        return 'Hash created: '+hash+'\n'
     except:
-        return 'Could not create hash with id: '+id+" and time Stamp: "+timestamp
+        return 'Could not create hash with id: '+id+' and time Stamp: '+timestamp+'\n'
 
 #Creando sesiones en la tabla A
 @app.route('/tablaA/<id>/<hash>',methods=['GET'])
@@ -107,7 +107,7 @@ def createA(id, hash):
     timestamp = datetime.now()
     sesion_timeStamp = tablaS.query.get(hash).timeStamp
     if (timestamp-sesion_timeStamp).total_seconds() <= 3600*4:
-        answer = 'ok\n\nValid Hash.'
+        answer = 'ok\n\nValid Hash.\n'
         print((timestamp-sesion_timeStamp).total_seconds()/60)
         new_assistance = tablaA(id, hash, timestamp,answer)
         try:
@@ -115,9 +115,9 @@ def createA(id, hash):
             db.session.commit()
             return answer
         except:
-            return 'Duplicate key, entry not valid.'
+            return 'Duplicate key, entry not valid.\n'
     else:
-        return 'nok\n\nHash not valid, more then 4 hours have passed since creation.'
+        return 'nok\n\nHash not valid, more then 4 hours have passed since creation.\n'
 
 #Obteniendo información de la tabla de sesiones
 @app.route('/tablaS',methods=['GET'])
@@ -146,9 +146,9 @@ def delete_ID():
         db.session.query(tablaS).delete()
         db.session.query(tablaA).delete()
         db.session.commit()
-        return 'ok'
+        return 'ok\n'
     except:
-        return 'nok'
+        return 'nok\n'
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0')
