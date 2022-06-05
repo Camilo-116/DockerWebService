@@ -9,7 +9,7 @@ from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm import Session
 
 app = Flask(__name__)
-uri = 'mysql+pymysql://root:camilo9116@localhost/asistenciaec'
+uri = 'mysql+pymysql://root:123456@mysql-db/asistenciaec'
 app.config['SQLALCHEMY_DATABASE_URI']= uri
 engine = create_engine(uri)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
@@ -70,7 +70,7 @@ def conexion():
         return 'nok'
 
 #Creando sesiones en la tabla S
-@app.route('/tablaS/<id>',methods=['POST'])
+@app.route('/tablaS/<id>',methods=['GET'])
 def createS(id):
     timestamp = datetime.now()
     hasher = hashlib.sha256()
@@ -81,12 +81,12 @@ def createS(id):
     try:
         db.session.add(new_session)
         db.session.commit()
-        return 'ok'
+        return 'Hash created: '+hash
     except:
-        return 'nok'
+        return 'Could not create hash with id: '+id+" and time Stamp: "+timestamp
 
 #Creando sesiones en la tabla S (timeStamp manual)
-@app.route('/tablaS/<id>&<ts>',methods=['POST'])
+@app.route('/tablaS/<id>/<ts>',methods=['GET'])
 def createS_manual(id,ts):
     timestamp = datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S')
     hasher = hashlib.sha256()
@@ -97,12 +97,12 @@ def createS_manual(id,ts):
     try:
         db.session.add(new_session)
         db.session.commit()
-        return 'ok'
+        return 'Hash created: '+hash
     except:
-        return 'nok'
+        return 'Could not create hash with id: '+id+" and time Stamp: "+timestamp
 
 #Creando sesiones en la tabla A
-@app.route('/tablaA/<id>&<hash>',methods=['POST'])
+@app.route('/tablaA/<id>/<hash>',methods=['GET'])
 def createA(id, hash):
     timestamp = datetime.now()
     sesion_timeStamp = tablaS.query.get(hash).timeStamp
@@ -139,7 +139,7 @@ def get_ID(id):
     return tSs_Schema.jsonify(sesiones)
 
 #Eliminando las tablas
-@app.route('/delete', methods=['DELETE'])
+@app.route('/delete', methods=['GET'])
 def delete_ID():
     try:
         db.session.query(tablaS).delete()
@@ -150,4 +150,4 @@ def delete_ID():
         return 'nok'
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8000)
+    app.run(debug=True,host='0.0.0.0')
