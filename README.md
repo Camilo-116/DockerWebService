@@ -14,10 +14,9 @@ $ docker-compose up -d
 ```
 # Test app
 1. `curl http://localhost:5000/` test if conection with the database is succesfull sending message 'ok' if not 'nok'.
-2. `curl http://localhost:5000/tablaS/<id>` creates a hash with ID.
-3. `curl http://localhost:5000/tablaS/<id>/<ts>` creates a hash with ID and TimeStamp.
+2. `curl http://localhost:5000/tablaS/<id>` creates a new session generating a hash with ID and Time Stamp.
+3. `curl http://localhost:5000/tablaS/<id>/<ts>` creates a new session generating a hash with ID and manual Time Stamp.
 4. `curl http://localhost:5000/tablaA/<id>/<hash>` marks attendance with student ID and checks if the hash is valid and is within 4 hours of hash generation.
-5. `curl http://localhost:5000/tablaA` returns a JSON of attendance of all classes.
-6. `curl http://localhost:5000/tablaS` returns a JSON of all generated hashes for attendance.
-7. `curl http://localhost:5000/sesion/<id>` returns a JSON for an specific ID in sessions tables.
-8. `curl http://localhost:5000/delete` deletes content of both tables.
+5. `curl http://localhost:5000/tablaS` returns a JSON of attendance of all sessions.
+6. `curl http://localhost:5000/tablaA` returns a JSON of all generated sessions attendances.
+7. `curl http://localhost:5000/delete` deletes content of both tables.
