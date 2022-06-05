@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 app = Flask(__name__)
 uri = 'mysql+pymysql://root:123456@mysql-db/asistenciaec'
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config['SQLALCHEMY_DATABASE_URI']= uri
 engine = create_engine(uri)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
