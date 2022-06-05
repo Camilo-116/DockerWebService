@@ -11,5 +11,5 @@ EXPOSE 3306
 EXPOSE 5000
 COPY . .
 COPY ./docker-entrypoint.sh /
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["sudo","./docker-entrypoint.sh"]
 # CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
