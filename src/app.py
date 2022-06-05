@@ -107,12 +107,13 @@ def createA(id, hash):
     timestamp = datetime.now()
     sesion_timeStamp = tablaS.query.get(hash).timeStamp
     if (timestamp-sesion_timeStamp).total_seconds() <= 3600*4:
+        answer = 'ok\n\nValid Hash.'
         print((timestamp-sesion_timeStamp).total_seconds()/60)
-        new_assistance = tablaA(id, hash, timestamp,'ok\n\nValid Hash.')
+        new_assistance = tablaA(id, hash, timestamp,answer)
         try:
             db.session.add(new_assistance)
             db.session.commit()
-            return 'ok'
+            return answer
         except:
             return 'Duplicate key, entry not valid.'
     else:
