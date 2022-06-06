@@ -7,9 +7,15 @@ from sqlalchemy import create_engine
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm import Session
+import yaml as yml
+
+#Import database connection credentials from docker-compose file
+with open('docker-compose.yml') as fh:
+    docker_compose = yml.load(fh, Loader=yml.FullLoader)
+password,host,database = [docker_compose['services']['db']['environment']['MYSQL_ROOT_PASSWORD'],docker_compose['services']['db']['hostname'],docker_compose['services']['db']['environment']['MYSQL_DATABASE']]
 
 app = Flask(__name__)
-uri = 'mysql+pymysql://root:123456@mysql-db/asistenciaec'
+uri = 'mysql+pymysql://root:'+password+'@'+host+'/'+database
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.config['SQLALCHEMY_DATABASE_URI']= uri
 engine = create_engine(uri)

@@ -5,3 +5,4 @@ sqlalchemy-utils==0.38.2
 flask-marshmallow==0.14.0
 marshmallow-sqlalchemy==0.28.0
 pymysql==1.0.2
+pyyaml==6.0
